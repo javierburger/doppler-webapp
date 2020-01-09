@@ -132,6 +132,13 @@ interface PlanEntry {
   isFreeAccount: boolean;
 }
 
+interface SmsEntry {
+  buttonText: string;
+  buttonUrl: string;
+  description: string;
+  remainingCredits: number;
+}
+
 interface AvatarEntry {
   color: Color;
   text: string;
@@ -194,6 +201,14 @@ function mapPlanEntry(json: any): PlanEntry {
       json.planType === 1 || json.planType === 7 || json.planType === '1' || json.planType === '7',
   };
 }
+function mapSmsEntry(json: any): SmsEntry {
+  return {
+    buttonText: json.buttonText,
+    buttonUrl: json.buttonUrl,
+    description: json.description,
+    remainingCredits: (json.remainingCredits && JSON.parse(json.remainingCredits)) || 0
+  };
+}
 //TODO: Refactor backend to send proper active values
 function mapNavEntry(json: any): NavEntry {
   return {
@@ -231,6 +246,7 @@ export function mapHeaderDataJson(json: any) {
       lang: json.user.lang,
       nav: (json.user.nav && json.user.nav.map(mapNavEntry)) || [],
       plan: mapPlanEntry(json.user.plan),
+      sms: mapSmsEntry(json.user.sms)
     },
     jwtToken: json.jwtToken,
     notifications: json.notifications || [],
